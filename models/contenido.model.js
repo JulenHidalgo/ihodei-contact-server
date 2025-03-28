@@ -14,13 +14,13 @@ class Contenido {
   }
 
   static fromRow(row) {
-    return new Obra(row.id, row.tipoContenido, row.publicacion_id);
+    return new Contenido(row.id, row.tipoContenido, row.publicacion_id);
   }
 
   static async getAllFromPublicacion(publicacion_id) {
     const query = "SELECT * FROM contenido WHERE publicacion_id = ?";
     const params = [publicacion_id];
-    const rows = await db.query(query);
+    const [rows] = await db.query(query, params);
     return rows.map(Contenido.fromRow);
   }
 }

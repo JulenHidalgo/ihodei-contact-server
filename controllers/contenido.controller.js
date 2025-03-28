@@ -2,7 +2,6 @@ const Contenido = require("../models/contenido.model");
 const fs = require("fs");
 const path = require("path");
 const { google } = require("googleapis");
-const Contenido = require("../models/contenido.model");
 
 // Autenticación con token y credenciales
 const auth = new google.auth.OAuth2();

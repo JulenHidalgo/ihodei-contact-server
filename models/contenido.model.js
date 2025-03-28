@@ -23,6 +23,14 @@ class Contenido {
     const [rows] = await db.query(query, params);
     return rows.map(Contenido.fromRow);
   }
+
+  static async saveVideo(driveFileId, publicacion_id) {
+    const query =
+      "INSERT INTO contenido (id, tipoContenido, publicacion_id) VALUES (?, 'VID', ?)";
+    const params = [driveFileId, publicacion_id];
+    await db.query(query, params);
+    return new Contenido(driveFileId, "VID", publicacion_id);
+  }
 }
 
 // Exportar la clase para que pueda ser utilizada en otros módulos

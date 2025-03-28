@@ -5,7 +5,7 @@ const { google } = require("googleapis");
 
 // Autenticación con token y credenciales
 const auth = new google.auth.OAuth2();
-auth.setCredentials(require("../token.json"));
+auth.setCredentials(JSON.parse(process.env.GOOGLE_TOKEN));
 const drive = google.drive({ version: "v3", auth });
 
 const postContenido = async (req, res) => {

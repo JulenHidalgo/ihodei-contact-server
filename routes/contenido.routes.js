@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  getAllFromPublicacion,
+  getContenidoByIdPublicacion,
 } = require("../controllers/contenido.controller");
 
-router.get("/", getAllFromPublicacion);
+router.get("/", getContenidoByIdPublicacion);
 
 module.exports = router;

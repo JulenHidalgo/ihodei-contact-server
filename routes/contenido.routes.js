@@ -7,7 +7,7 @@ const {
   postContenido,
 } = require("../controllers/contenido.controller");
 
-router.get("/", getContenidoByIdPublicacion);
+router.get("/:publicacion_id", getContenidoByIdPublicacion);
 
 router.post("/", upload.single("video"), postContenido);
 

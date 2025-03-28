@@ -12,18 +12,18 @@ class Publicacion {
   }
 
   static async getAll() {
-    const query = "SELECT * FROM publicacion";
-    const rows = await db.query(query);
+    const [rows] = await db.query("SELECT * FROM publicacion");
     return rows.map(Publicacion.fromRow);
   }
 
   static async postPublicacion(titulo, texto) {
-    const query = "INSERT INTO publicacion (titulo, texto) VALUES (?, ?)";
+    const insertQuery = "INSERT INTO publicacion (titulo, texto) VALUES (?, ?)";
     const params = [titulo, texto];
-    await db.query(query, params);
+    await db.query(insertQuery, params);
 
-    const selectQuery = "SELECT * FROM publicacion WHERE id = LAST_INSERT_ID()";
-    const rows = await db.query(selectQuery);
+    const [rows] = await db.query(
+      "SELECT * FROM publicacion WHERE id = LAST_INSERT_ID()"
+    );
     return rows.map(Publicacion.fromRow)[0];
   }
 }

@@ -8,7 +8,7 @@ class Publicacion {
   }
 
   static fromRow(row) {
-    return new Obra(row.id, row.titulo, row.texto);
+    return new Publicacion(row.id, row.titulo, row.texto);
   }
 
   static async getAll() {
@@ -19,7 +19,7 @@ class Publicacion {
 
   static async postPublicacion(titulo, texto) {
     const query = "INSERT INTO publicacion (titulo, texto) VALUES (?, ?)";
-    const params = [publicacion.titulo, publicacion.texto];
+    const params = [titulo, texto];
     await db.query(query, params);
 
     const selectQuery = "SELECT * FROM publicacion WHERE id = LAST_INSERT_ID()";

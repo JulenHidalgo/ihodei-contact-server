@@ -11,52 +11,54 @@ const drive = google.drive({ version: "v3", auth });
 
 const postContenido = async (req, res) => {
   try {
-    const { publicacion_id } = req.body;
-    const file = req.file;
+    const { publicacion_id, tipoContenido } = req.body;
+    const archivo = req.file;
 
-    if (!file) {
-      console.log("❌ Archivo no recibido.");
-      return res.status(400).json({ error: "No se envió ningún archivo" });
-    }
-    if (!publicacion_id) {
-      console.log("❌ publicacion_id no recibido.");
-      return res.status(400).json({ error: "Falta publicacion_id" });
+    // Validaciones
+    if (!archivo || !publicacion_id || !tipoContenido) {
+      return res.status(400).json({ error: "Faltan datos en la solicitud" });
     }
 
-    console.log("✅ Archivo recibido:", {
-      name: file.originalname,
-      type: file.mimetype,
-      size: file.size,
+    const tiposValidos = ["PDF", "IMG", "VID"];
+    if (!tiposValidos.includes(tipoContenido)) {
+      return res.status(400).json({ error: "Tipo de contenido no válido" });
+    }
+
+    console.log("📦 Subiendo archivo a Google Drive...");
+
+    const drive = google.drive({ version: "v3", auth });
+
+    const response = await drive.files.create({
+      requestBody: {
+        name: archivo.originalname,
+        mimeType: archivo.mimetype,
+      },
+      media: {
+        mimeType: archivo.mimetype,
+        body: Buffer.from(archivo.buffer),
+      },
     });
 
-    const fileMetadata = {
-      name: file.originalname,
-      parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"], // Carpeta destino en Drive
+    const fileId = response.data.id;
+
+    console.log("✅ Archivo subido a Drive con ID:", fileId);
+
+    // Guardar en base de datos
+    const nuevoContenido = {
+      publicacion_id,
+      tipoContenido,
+      archivo: fileId, // Este es el ID en Google Drive
     };
 
-    const media = {
-      mimeType: file.mimetype,
-      body: streamifier.createReadStream(file.buffer),
-    };
+    const resultado = await Contenido.crear(nuevoContenido);
 
-    const driveRes = await drive.files.create({
-      requestBody: fileMetadata,
-      media,
-      fields: "id",
-    });
-
-    const fileId = driveRes.data.id;
-    console.log("📁 Archivo subido a Drive con ID:", fileId);
-
-    const contenido = await Contenido.saveVideo(fileId, publicacion_id);
-
-    res.status(201).json({
+    res.status(200).json({
       mensaje: "Contenido guardado correctamente",
-      contenido,
+      contenido: resultado,
     });
   } catch (err) {
-    console.error("❌ Error en postContenido:", err);
-    res.status(500).json({ error: "Error al subir y guardar contenido" });
+    console.error("❌ Error al subir contenido:", err.message);
+    res.status(500).json({ error: "Error interno al subir contenido" });
   }
 };
 

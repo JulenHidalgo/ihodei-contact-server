@@ -1,17 +1,28 @@
 const multer = require("multer");
 const path = require("path");
 
-const storage = multer.memoryStorage(); // el archivo se guarda en memoria
+// Usamos memoryStorage para acceder a file.buffer en el backend
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const ext = path.extname(file.originalname).toLowerCase();
-  if (ext === ".mp4" || ext === ".mov" || ext === ".avi") {
+  const validExtensions = [".mp4", ".mov", ".avi"];
+
+  if (validExtensions.includes(ext)) {
     cb(null, true);
   } else {
+    console.warn(`❌ Archivo rechazado por extensión no permitida: ${ext}`);
     cb(new Error("Solo se permiten vídeos (.mp4, .mov, .avi)"));
   }
 };
 
-const upload = multer({ storage, fileFilter });
+// Middleware de subida configurado para extensiones de vídeo
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // Limite opcional: 100MB
+  },
+});
 
 module.exports = upload;

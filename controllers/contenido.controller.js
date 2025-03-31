@@ -14,14 +14,24 @@ const postContenido = async (req, res) => {
     const { publicacion_id } = req.body;
     const file = req.file;
 
-    if (!file)
+    if (!file) {
+      console.log("❌ Archivo no recibido.");
       return res.status(400).json({ error: "No se envió ningún archivo" });
-    if (!publicacion_id)
+    }
+    if (!publicacion_id) {
+      console.log("❌ publicacion_id no recibido.");
       return res.status(400).json({ error: "Falta publicacion_id" });
+    }
+
+    console.log("✅ Archivo recibido:", {
+      name: file.originalname,
+      type: file.mimetype,
+      size: file.size,
+    });
 
     const fileMetadata = {
       name: file.originalname,
-      parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"], // ID de tu carpeta en Drive
+      parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"], // Carpeta destino en Drive
     };
 
     const media = {
@@ -29,7 +39,6 @@ const postContenido = async (req, res) => {
       body: streamifier.createReadStream(file.buffer),
     };
 
-    // Subir a Google Drive
     const driveRes = await drive.files.create({
       requestBody: fileMetadata,
       media,
@@ -37,8 +46,8 @@ const postContenido = async (req, res) => {
     });
 
     const fileId = driveRes.data.id;
+    console.log("📁 Archivo subido a Drive con ID:", fileId);
 
-    // Guardar en la base de datos
     const contenido = await Contenido.saveVideo(fileId, publicacion_id);
 
     res.status(201).json({
@@ -46,7 +55,7 @@ const postContenido = async (req, res) => {
       contenido,
     });
   } catch (err) {
-    console.error("Error en postContenido:", err.message);
+    console.error("❌ Error en postContenido:", err);
     res.status(500).json({ error: "Error al subir y guardar contenido" });
   }
 };

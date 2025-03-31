@@ -32,6 +32,7 @@ const postContenido = async (req, res) => {
       requestBody: {
         name: archivo.originalname,
         mimeType: archivo.mimetype,
+        parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"],
       },
       media: {
         mimeType: archivo.mimetype,

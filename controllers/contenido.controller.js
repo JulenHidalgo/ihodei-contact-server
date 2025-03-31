@@ -2,6 +2,7 @@ const Contenido = require("../models/contenido.model");
 const fs = require("fs");
 const path = require("path");
 const { google } = require("googleapis");
+const streamifier = require("streamifier");
 
 // Autenticación con token y credenciales
 const auth = new google.auth.OAuth2();
@@ -20,22 +21,18 @@ const postContenido = async (req, res) => {
 
     const fileMetadata = {
       name: file.originalname,
-      parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"],
+      parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"], // ID de tu carpeta en Drive
     };
 
     const media = {
       mimeType: file.mimetype,
-      body: Buffer.from(file.buffer),
+      body: streamifier.createReadStream(file.buffer),
     };
 
     // Subir a Google Drive
     const driveRes = await drive.files.create({
       requestBody: fileMetadata,
-      media: {
-        mimeType: file.mimetype,
-        body:
-          file.stream || require("streamifier").createReadStream(file.buffer),
-      },
+      media,
       fields: "id",
     });
 

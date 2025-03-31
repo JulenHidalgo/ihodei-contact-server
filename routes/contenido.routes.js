@@ -9,6 +9,6 @@ const {
 
 router.get("/:publicacion_id", getContenidoByIdPublicacion);
 
-router.post("/", upload.single("video"), postContenido);
+router.post("/", upload.single("archivo"), postContenido);
 
 module.exports = router;

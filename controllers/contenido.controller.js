@@ -26,13 +26,23 @@ const postContenido = async (req, res) => {
 
     console.log("📦 Subiendo archivo a Google Drive...");
 
+    const parent = "1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS";
+
+    if (tipoContenido === "IMG") {
+      parent = "1IEi2wP9Bt6ysFAM1dyycgxWsUukpzHOz";
+    } else if (tipoContenido === "PDF") {
+      parent = "1SCZ783qQkwlb2u4WkMHUbquGlEz3RnV9";
+    } else if (tipoContenido === "VID") {
+      parent = "1V4Lec5HisZAyUErCfDh8TvXugvIDV-eP";
+    }
+
     const drive = google.drive({ version: "v3", auth });
 
     const response = await drive.files.create({
       requestBody: {
         name: archivo.originalname,
         mimeType: archivo.mimetype,
-        parents: ["1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS"],
+        parents: [parent],
       },
       media: {
         mimeType: archivo.mimetype,

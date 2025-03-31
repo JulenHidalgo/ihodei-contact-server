@@ -44,13 +44,9 @@ const postContenido = async (req, res) => {
     console.log("✅ Archivo subido a Drive con ID:", fileId);
 
     // Guardar en base de datos
-    const nuevoContenido = {
-      publicacion_id,
-      tipoContenido,
-      archivo: fileId, // Este es el ID en Google Drive
-    };
+    const nuevoContenido = new Contenido(fileId, tipoContenido, publicacion_id);
 
-    const resultado = await Contenido.crear(nuevoContenido);
+    const resultado = await Contenido.saveInfo(nuevoContenido);
 
     res.status(200).json({
       mensaje: "Contenido guardado correctamente",

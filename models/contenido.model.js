@@ -24,12 +24,16 @@ class Contenido {
     return rows.map(Contenido.fromRow);
   }
 
-  static async saveVideo(driveFileId, publicacion_id) {
+  static async saveInfo(contenido) {
     const query =
-      "INSERT INTO contenido (id, tipoContenido, publicacion_id) VALUES (?, 'VID', ?)";
-    const params = [driveFileId, publicacion_id];
+      "INSERT INTO contenido (id, tipoContenido, publicacion_id) VALUES (?, ?, ?)";
+    const params = [
+      contenido.id,
+      contenido.tipoContenido,
+      contenido.publicacion_id,
+    ];
     await db.query(query, params);
-    return new Contenido(driveFileId, "VID", publicacion_id);
+    return contenido;
   }
 }
 

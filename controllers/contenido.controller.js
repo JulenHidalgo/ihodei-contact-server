@@ -35,7 +35,7 @@ const postContenido = async (req, res) => {
       },
       media: {
         mimeType: archivo.mimetype,
-        body: Buffer.from(archivo.buffer),
+        body: streamifier.createReadStream(archivo.buffer),
       },
     });
 

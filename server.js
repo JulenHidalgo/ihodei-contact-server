@@ -23,6 +23,9 @@ app.use("/contenido", contenidoRoutes);
 const publicacionRoutes = require("./routes/publicacion.routes");
 app.use("/publicacion", publicacionRoutes);
 
+const previewRoutes = require("./routes/preview.routes");
+app.use("/preview", previewRoutes);
+
 app.get("/", (req, res) => {
   res.json({ mensaje: "Servidor funcionando correctamente" });
 });

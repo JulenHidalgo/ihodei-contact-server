@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllPreview } = require("../controllers/preview.controller");
+const { getAllPreviews } = require("../controllers/preview.controller");
 
-router.get("/", getAllPreview);
+router.get("/", getAllPreviews);
 
 module.exports = router;

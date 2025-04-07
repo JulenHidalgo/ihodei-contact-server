@@ -11,6 +11,19 @@ const getAllPublicaciones = async (req, res) => {
   }
 };
 
+const getPublicacionById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const publicacion = await Publicacion.getById(id);
+    console.log("Obteniendo publicacion:", publicacion);
+    return res.json(publicacion);
+  } catch (err) {
+    console.error("Error obteniendo publicacion:", err.message);
+    return res.status(500).json({ error: "Error obteniendo publicacion" });
+  }
+};
+
 const postPublicacion = async (req, res) => {
   try {
     const { titulo, texto } = req.body;
@@ -28,4 +41,5 @@ const postPublicacion = async (req, res) => {
 module.exports = {
   getAllPublicaciones,
   postPublicacion,
+  getPublicacionById,
 };

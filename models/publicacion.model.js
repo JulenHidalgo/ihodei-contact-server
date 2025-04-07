@@ -16,6 +16,16 @@ class Publicacion {
     return rows.map(Publicacion.fromRow);
   }
 
+  static async getById(id) {
+    const [rows] = await db.query("SELECT * FROM publicacion WHERE id = ?", [
+      id,
+    ]);
+    if (rows.length === 0) {
+      throw new Error("Publicación no encontrada");
+    }
+    return rows.map(Publicacion.fromRow);
+  }
+
   static async postPublicacion(titulo, texto) {
     const insertQuery = "INSERT INTO publicacion (titulo, texto) VALUES (?, ?)";
     const params = [titulo, texto];

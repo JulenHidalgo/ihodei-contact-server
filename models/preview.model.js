@@ -12,7 +12,9 @@ class Preview {
   }
 
   static async getAll() {
-    const [rows] = await db.query("SELECT * FROM vista_preview");
+    const [rows] = await db.query(
+      "SELECT * FROM vista_preview ORDER BY id DESC"
+    );
     return rows.map(Preview.fromRow);
   }
 }

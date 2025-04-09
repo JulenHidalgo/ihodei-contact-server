@@ -13,6 +13,7 @@ const validExtensions = [
   ".jpg",
   ".jpeg",
   ".png",
+  ".jfif",
 ];
 
 const fileFilter = (req, file, cb) => {

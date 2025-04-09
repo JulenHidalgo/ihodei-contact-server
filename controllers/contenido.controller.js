@@ -63,7 +63,12 @@ const postContenido = async (req, res) => {
     });
   } catch (err) {
     console.error("❌ Error al subir contenido:", err.message);
-    res.status(500).json({ error: "Error interno al subir contenido" });
+    res
+      .status(500)
+      .json({
+        error:
+          "El token ha caducado o no existe, por favor contacta con el responsable",
+      });
   }
 };
 

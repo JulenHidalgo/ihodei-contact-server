@@ -36,6 +36,12 @@ class Publicacion {
     );
     return rows.map(Publicacion.fromRow)[0];
   }
+
+  static async deletePublicacion(id) {
+    const deleteQuery = "DELETE FROM publicacion WHERE id = ?";
+    const params = [id];
+    await db.query(deleteQuery, params);
+  }
 }
 
 // Exportar la clase para que pueda ser utilizada en otros módulos

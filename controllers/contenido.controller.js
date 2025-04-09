@@ -1,4 +1,6 @@
 const Contenido = require("../models/contenido.model");
+const Preview = require("../models/preview.model");
+const Publicacion = require("../models/publicacion.model");
 const fs = require("fs");
 const path = require("path");
 const { google } = require("googleapis");
@@ -9,10 +11,14 @@ const auth = new google.auth.OAuth2();
 auth.setCredentials(JSON.parse(process.env.GOOGLE_TOKEN));
 const drive = google.drive({ version: "v3", auth });
 
+let publicacion_id = "";
+
 const postContenido = async (req, res) => {
   try {
     const { publicacion_id, tipoContenido } = req.body;
     const archivo = req.file;
+
+    publicacion_id = publicacion_id;
 
     // Validaciones
     if (!archivo || !publicacion_id || !tipoContenido) {
@@ -62,13 +68,14 @@ const postContenido = async (req, res) => {
       contenido: resultado,
     });
   } catch (err) {
+    if (await Preview.getByIdForDelete(publicacion_id)) {
+      await Publicacion.deletePublicacion(publicacion_id);
+    }
     console.error("❌ Error al subir contenido:", err.message);
-    res
-      .status(500)
-      .json({
-        error:
-          "El token ha caducado o no existe, por favor contacta con el responsable",
-      });
+    res.status(500).json({
+      error:
+        "El token ha caducado o no existe, por favor contacta con el responsable",
+    });
   }
 };
 

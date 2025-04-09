@@ -17,6 +17,14 @@ class Preview {
     );
     return rows.map(Preview.fromRow);
   }
+
+  static async getByIdForDelete(id) {
+    const [rows] = await db.query(
+      "SELECT * FROM vista_preview WHERE id = ? AND contenido_id IS NULL",
+      [id]
+    );
+    return rows.length ? Preview.fromRow(rows[0]) : null;
+  }
 }
 
 // Exportar la clase para que pueda ser utilizada en otros módulos

@@ -9,9 +9,7 @@ const streamifier = require("streamifier");
 // 1. Cargar credenciales del cliente (client_id, secret, etc.)
 const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 
-const token = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../token.json"), "utf8")
-);
+const token = JSON.parse(process.env.GOOGLE_TOKEN);
 
 const { client_id, client_secret, redirect_uris } = credentials.web;
 

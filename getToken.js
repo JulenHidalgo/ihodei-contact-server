@@ -31,6 +31,7 @@ function authorize(credentials) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
+    prompt: "consent",
   });
 
   console.log("🌐 Autoriza esta app visitando esta URL:");
@@ -41,9 +42,9 @@ function authorize(credentials) {
     output: process.stdout,
   });
 
-  rl.question("👉 Introduce el código de autorización aquí: ", (code) => {
+  rl.question("👉 Introduce la url dónde te ha redirigido aquí: ", (code) => {
     rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
+    oAuth2Client.getToken(obtenerCodigoVerificacion(code), (err, token) => {
       if (err) return console.error("❌ Error obteniendo token:", err);
       oAuth2Client.setCredentials(token);
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
@@ -52,4 +53,9 @@ function authorize(credentials) {
       });
     });
   });
+}
+
+function obtenerCodigoVerificacion(url) {
+  const urlObj = new URL(url);
+  return urlObj.searchParams.get("code");
 }

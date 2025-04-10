@@ -6,10 +6,38 @@ const path = require("path");
 const { google } = require("googleapis");
 const streamifier = require("streamifier");
 
-// Autenticación con token y credenciales
-const auth = new google.auth.OAuth2();
-auth.setCredentials(JSON.parse(process.env.GOOGLE_TOKEN));
-const drive = google.drive({ version: "v3", auth });
+// 1. Cargar credenciales del cliente (client_id, secret, etc.)
+const credentials = require("../config/client_secret_420877649235-dhkv0f5qh639de5f18cvbpgto6767764.apps.googleusercontent.com.json");
+const token = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "../token.json"), "utf8")
+);
+
+const { client_id, client_secret, redirect_uris } = credentials.web;
+
+const oAuth2Client = new google.auth.OAuth2(
+  client_id,
+  client_secret,
+  redirect_uris[0]
+);
+
+// 2. Aplicar token guardado
+oAuth2Client.setCredentials(token);
+
+// 3. Guardar automáticamente si cambia
+oAuth2Client.on("tokens", (tokens) => {
+  if (tokens.refresh_token) {
+    token.refresh_token = tokens.refresh_token;
+  }
+  token.access_token = tokens.access_token;
+  token.expiry_date = tokens.expiry_date;
+
+  fs.writeFileSync(
+    path.join(__dirname, "../token.json"),
+    JSON.stringify(token)
+  );
+});
+
+const drive = google.drive({ version: "v3", auth: oAuth2Client });
 
 let publicacion_id = "";
 

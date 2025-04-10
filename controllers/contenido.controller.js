@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const { google } = require("googleapis");
 const streamifier = require("streamifier");
+const { log } = require("console");
 
 // 1. Cargar credenciales del cliente (client_id, secret, etc.)
 const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
@@ -101,7 +102,8 @@ const postContenido = async (req, res) => {
     console.error("❌ Error al subir contenido:", err.message);
     res.status(500).json({
       error:
-        "El token ha caducado o no existe, por favor contacta con el responsable",
+        "El token ha caducado o no existe, por favor contacta con el responsable " +
+        publicacion_id,
     });
   }
 };

@@ -71,14 +71,14 @@ const postContenido = async (req, res) => {
 
     console.log("📦 Subiendo archivo a Google Drive...");
 
-    let parent = "1wMzpUZFE-CHArZAfyV7cbCjpU26SLnlS";
+    let parent = process.env.DRIVE_GENERIC_FOLDER;
 
     if (tipoContenido === "IMG") {
-      parent = "1IEi2wP9Bt6ysFAM1dyycgxWsUukpzHOz";
+      parent = process.env.DRIVE_IMG_FOLDER;
     } else if (tipoContenido === "PDF") {
-      parent = "1SCZ783qQkwlb2u4WkMHUbquGlEz3RnV9";
+      parent = process.env.DRIVE_PDF_FOLDER;
     } else if (tipoContenido === "VID") {
-      parent = "1V4Lec5HisZAyUErCfDh8TvXugvIDV-eP";
+      parent = process.env.DRIVE_VID_FOLDER;
     }
 
     const response = await drive.files.create({

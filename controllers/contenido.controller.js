@@ -7,7 +7,8 @@ const { google } = require("googleapis");
 const streamifier = require("streamifier");
 
 // 1. Cargar credenciales del cliente (client_id, secret, etc.)
-const credentials = require("../config/client_secret_420877649235-dhkv0f5qh639de5f18cvbpgto6767764.apps.googleusercontent.com.json");
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+
 const token = JSON.parse(
   fs.readFileSync(path.join(__dirname, "../token.json"), "utf8")
 );

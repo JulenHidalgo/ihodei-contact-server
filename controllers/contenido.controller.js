@@ -5,12 +5,18 @@ const fs = require("fs");
 const path = require("path");
 const { google } = require("googleapis");
 const streamifier = require("streamifier");
-const { log } = require("console");
 
-// 1. Cargar credenciales del cliente (client_id, secret, etc.)
+// 🔐 Logs para depuración
+console.log(
+  "🔑 Cargando GOOGLE_CREDENTIALS:",
+  !!process.env.GOOGLE_CREDENTIALS
+);
+console.log("🔐 Cargando GOOGLE_TOKEN:", !!process.env.GOOGLE_TOKEN);
+
 const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
-
 const token = JSON.parse(process.env.GOOGLE_TOKEN);
+
+console.log("📥 Token cargado:", token);
 
 const { client_id, client_secret, redirect_uris } = credentials.web;
 
@@ -20,12 +26,13 @@ const oAuth2Client = new google.auth.OAuth2(
   redirect_uris[0]
 );
 
-// 2. Aplicar token guardado
 oAuth2Client.setCredentials(token);
 
-// 3. Guardar automáticamente si cambia
+// 🔁 Guardar automáticamente si cambia el token
 oAuth2Client.on("tokens", (tokens) => {
+  console.log("🔁 Token refrescado automáticamente");
   if (tokens.refresh_token) {
+    console.log("✅ Nuevo refresh_token recibido");
     token.refresh_token = tokens.refresh_token;
   }
   token.access_token = tokens.access_token;
@@ -46,7 +53,11 @@ const postContenido = async (req, res) => {
     const { publicacion_id, tipoContenido } = req.body;
     const archivo = req.file;
 
-    publicacion_id = publicacion_id;
+    console.log("📝 Datos recibidos:", {
+      archivoNombre: archivo?.originalname,
+      tipoContenido,
+      publicacion_id,
+    });
 
     // Validaciones
     if (!archivo || !publicacion_id || !tipoContenido) {
@@ -96,10 +107,17 @@ const postContenido = async (req, res) => {
       contenido: resultado,
     });
   } catch (err) {
+    console.error("❌ Error al subir contenido:", {
+      mensaje: err.message,
+      stack: err.stack,
+      nombre: err.name,
+      causa: err.cause,
+    });
+
     if (await Preview.getByIdForDelete(publicacion_id)) {
       await Publicacion.deletePublicacion(publicacion_id);
     }
-    console.error("❌ Error al subir contenido:", err.message);
+
     res.status(500).json({
       error:
         "El token ha caducado o no existe, por favor contacta con el responsable " +
@@ -115,16 +133,16 @@ const getContenidoByIdPublicacion = async (req, res) => {
     const contenidos = await Contenido.getAllFromPublicacion(publicacion_id);
 
     if (!contenidos || contenidos.length === 0) {
-      console.log("No se encontraron contenidos para esta publicacion");
+      console.log("⚠️ No se encontraron contenidos para esta publicacion");
       return res
         .status(404)
         .json({ error: "No se encontraron contenidos para esta publicacion" });
     }
 
-    console.log("Obteniendo contenido de publicacion:", contenidos);
+    console.log("📥 Obteniendo contenido de publicacion:", contenidos);
     return res.status(200).json(contenidos);
   } catch (err) {
-    console.error("Error obteniendo contenido de publicacion:", err.message);
+    console.error("❌ Error obteniendo contenido de publicacion:", err.message);
     return res
       .status(500)
       .json({ error: "Error obteniendo contenido de publicacion" });

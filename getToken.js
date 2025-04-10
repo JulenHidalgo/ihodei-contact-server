@@ -4,7 +4,7 @@ const { google } = require("googleapis");
 
 // Cargar las credenciales
 const CREDENTIALS_PATH =
-  "./config/client_secret_420877649235-dhkv0f5qh639de5f18cvbpgto6767764.apps.googleusercontent.com.json";
+  "./config/client_secret_870034684557-ic87fkl5pmdr240p3co54i5310qbbc7o.apps.googleusercontent.com.json";
 const TOKEN_PATH = "./token.json";
 const SCOPES = ["https://www.googleapis.com/auth/drive.file"];
 

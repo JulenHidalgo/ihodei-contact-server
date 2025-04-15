@@ -6,7 +6,7 @@ const getAllPublicaciones = async (req, res) => {
     console.log("Obteniendo publicaciones:", publicaciones);
     return res.json(publicaciones);
   } catch (err) {
-    console.error("Error obteniendo publicaciones:", err.message);
+    console.error("Error obteniendo publicaciones:", err);
     return res.status(500).json({ error: "Error obteniendo publicaciones" });
   }
 };
@@ -19,7 +19,7 @@ const getPublicacionById = async (req, res) => {
     console.log("Obteniendo publicacion:", publicacion);
     return res.json(publicacion);
   } catch (err) {
-    console.error("Error obteniendo publicacion:", err.message);
+    console.error("Error obteniendo publicacion:", err);
     return res.status(500).json({ error: "Error obteniendo publicacion" });
   }
 };
@@ -32,7 +32,7 @@ const postPublicacion = async (req, res) => {
     console.log("Publicación creada:", publicacion);
     return res.status(201).json(publicacion);
   } catch (err) {
-    console.error("Error creando publicacion:", err.message);
+    console.error("Error creando publicacion:", err);
     return res.status(500).json({ error: "Error creando publicacion" });
   }
 };

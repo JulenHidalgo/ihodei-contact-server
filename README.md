@@ -95,6 +95,19 @@ iHodeiContact-server/
 
 ---
 
+## 📱 Aplicaciones relacionadas
+
+Este servidor se comunica con una aplicacion cliente y una extensión de Chrome desarrollada también para el proyecto iHodei Hub:
+
+- **App móvil** (Aplicación para todos los clientes):  
+  👉 [https://github.com/MeylinM/iHodeiHub](https://github.com/MeylinM/iHodeiHub)
+
+- **Extensión de Chrome** (Uso privado de la empresa):  
+  👉 [https://github.com/JulenHidalgo/ihodei-contact-chrome-extension](https://github.com/JulenHidalgo/ihodei-contact-chrome-extension)
+
+
+---
+
 ## 🛡️ Seguridad
 
 - No compartas tu archivo `.env` ni `token.json` públicamente.
